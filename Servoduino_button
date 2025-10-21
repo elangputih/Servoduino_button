@@ -1,48 +1,48 @@
-#include <Servo.h>
+ #include <Servo.h>;
+ 
+ // pushbutton pin
+ const int buttonPin = 8;
 
-// Definisikan Pin
-const int servoPin = 9;   // Pin untuk Sinyal Servo (biasanya PWM)
-const int buttonPin = 2;  // Pin untuk Input Tombol (pin digital)
+ // servo pin
+ const int servoPin = 3;
+ Servo servo;
 
-// Inisialisasi Objek
-Servo myservo; // Buat objek servo
 
-// Variabel Status
-int buttonState = 0; // Variabel untuk menyimpan status tombol
-int servoPos = 0;    // Variabel untuk menyimpan posisi servo saat ini
-
-void setup() {
-  // Inisialisasi Komponen
-  myservo.attach(servoPin);       // Pasang objek servo ke pin 9
-  pinMode(buttonPin, INPUT_PULLUP); // Atur pin tombol sebagai INPUT_PULLUP
+//create a variable to store a counter and set it to 0
+int counter = 0;
+void setup()
+{
+  servo.attach (servoPin);
   
-  // Set posisi awal servo ke 0 derajat
-  myservo.write(servoPos);
+  // Set up the pushbutton pins to be an input:
+  pinMode(buttonPin, INPUT);
 }
 
-void loop() {
-  // Baca status tombol
+
+void loop()
+{
+ // local variable to hold the pushbutton states
+  int buttonState;  
+
+  //read the digital state of buttonPin with digitalRead() function and store the           //value in buttonState variable
   buttonState = digitalRead(buttonPin);
 
-  // Cek apakah tombol DITEKAN (menggunakan INPUT_PULLUP, tombol ditekan berarti LOW)
-  if (buttonState == LOW) {
-    // Tombol ditekan, ubah posisi servo
-    
-    // Logika pengubahan posisi (misalnya, berputar 90 derajat setiap kali ditekan)
-    if (servoPos == 0) {
-      servoPos = 90; // Pindah ke 90 derajat
-    } else if (servoPos == 90) {
-      servoPos = 180; // Pindah ke 180 derajat
-    } else {
-      servoPos = 0; // Kembali ke 0 derajat (siklus berulang)
-    }
-
-    // Gerakkan Servo ke posisi yang baru
-    myservo.write(servoPos);
-
-    // Debounce: Tunggu sebentar setelah tombol ditekan untuk menghindari pembacaan ganda
-    delay(500); // Tunggu 500 milidetik
+  //if the button is pressed increment counter and wait a tiny bit to give us some          //time to release the button
+  if (buttonState == LOW) // light the LED
+  {
+    counter++;
+    delay(150);
   }
-  
-  // Tidak ada yang dilakukan jika tombol tidak ditekan
+
+  if(counter == 0)
+    servo.write (20);  // zero degrees
+  else if(counter == 1)
+    servo.write(90);
+  else if(counter == 2)
+    servo.write (150); 
+  else if(counter == 3)  
+    servo.write (180);
+  //else reset the counter to 0 which resets thr servo to 0 degrees
+  else
+   counter = 0;
 }
